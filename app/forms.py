@@ -1,6 +1,6 @@
 from app.models import HrAdmin
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField, RadioField, SelectField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 
 
@@ -30,7 +30,15 @@ class LoginForm(FlaskForm):
 
 
 class EmployeeForm(FlaskForm):
-    pass
+    employee_name = StringField('Employee Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[DataRequired()])
+    age = IntegerField('Age', validators=[DataRequired()])
+    phone = IntegerField('Phone', validators=[DataRequired()])
+    gender = RadioField('Gender', choices = [('Male','Male'),('Female','Female')])
+    job_title = SelectField('Job Title', choices = [('s', 'Select Field'),('Clerk', 'Clerk'),('SalesMan', 'SalesMan'), ('Manager', 'Manager')])
+    salary = IntegerField('Salary', validators=[DataRequired()])
+    submit = SubmitField('Add Employee')
 
 
 

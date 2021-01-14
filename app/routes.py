@@ -1,14 +1,39 @@
 from app import app, db
 from flask import redirect, render_template, url_for, flash
-from app.forms import RegisterForm, LoginForm
-from app.models import HrAdmin
+from app.forms import RegisterForm, LoginForm, EmployeeForm
+from app.models import HrAdmin, Employee
 from flask_login import current_user, login_user, logout_user, login_required
 
 
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html', title='Home')
+    employee_data = Employee.query.all()
+    return render_template('index.html', title='Home', employee_data=employee_data)
+
+
+@app.route('/add_employee', methods=['GET', 'POST'])
+@login_required
+def add_employee():
+    form = EmployeeForm()
+    if form.validate_on_submit():
+        employee = Employee(
+            employee_name=form.employee_name.data, 
+            email=form.email.data, 
+            address=form.address.data,
+            age=form.age.data,
+            phone=form.phone.data,
+            gender=form.gender.data,
+            job_title=form.job_title.data,
+            salary=form.salary.data
+        )
+        db.session.add(employee)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('add_employee.html', title='Add Employee', form=form)
+
+
+
 
 
 @app.route('/logout', methods=['GET', 'POST'])

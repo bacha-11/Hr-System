@@ -1,5 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Home page</h1>
+
+<a href=" {{ url_for('add_employee') }} "> <button>Add Employee</button> </a><br>
+
+<h1>Employee Detials</h1>
+
+<table style="width:100%" border="2px solid">
+    <tr>
+      <th>Employeename</th>
+      <th>Email</th>
+      <th>Address</th>
+      <th>Age</th>
+      <th>Phone</th>
+      <th>Gender</th>
+      <th>Job Title</th>
+      <th>Salary</th>
+      <th>Join Date</th>
+    </tr>
+{% for emp in employee_data %}
+
+
+    <tr>
+      <td>{{ emp.employee_name }}</td>
+      <td>{{ emp.email }}</td>
+      <td>{{ emp.address }}</td>
+      <td>{{ emp.age }}</td>
+      <td>{{ emp.phone }}</td>
+      <td>{{ emp.gender }}</td>
+      <td>{{ emp.job_title }}</td>
+      <td>{{ emp.salary }}</td>
+      <td>{{ emp.join_date }}</td>
+    </tr>
+
+{% endfor %}
+</table>
+
+
+
+
 {% endblock %}
