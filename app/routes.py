@@ -1,6 +1,6 @@
 from app import app, db
-from flask import redirect, render_template, url_for, flash
-from app.forms import RegisterForm, LoginForm, EmployeeForm
+from flask import redirect, render_template, url_for, flash, request
+from app.forms import RegisterForm, LoginForm, EmployeeForm, EmptyForm
 from app.models import HrAdmin, Employee
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -34,6 +34,48 @@ def add_employee():
 
 
 
+@app.route('/edit/<employee_name>', methods=['GET', 'POST'])
+@login_required
+def edit_employee(employee_name):
+    form = EmployeeForm()
+    if form.validate_on_submit():
+        emp = Employee.query.filter_by(employee_name=employee_name).first()
+        emp.employee_name = form.employee_name.data
+        emp.email = form.email.data
+        emp.address = form.address.data
+        emp.age = form.age.data
+        emp.phone = form.phone.data
+        emp.gender = form.gender.data
+        emp.job_title = form.job_title.data
+        emp.salary = form.salary.data
+        db.session.commit()
+        flash(f'{ emp.employee_name } has been update ')
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        emp = Employee.query.filter_by(employee_name=employee_name).first()
+        form.employee_name.data = emp.employee_name
+        form.email.data = emp.email 
+        form.address.data = emp.address
+        form.age.data = emp.age
+        form.phone.data = emp.phone
+        form.gender.data = emp.gender
+        form.job_title.data = emp.job_title
+        form.salary.data = emp.salary
+    return render_template('add_employee.html', title='Edit Employee', form=form)
+
+
+
+@app.route('/delete/<employee_name>', methods=['GET', 'POST'])
+@login_required
+def delete_employee(employee_name):
+    form = EmptyForm()
+    emp = Employee.query.filter_by(employee_name=employee_name).first()
+    if form.validate_on_submit():
+        db.session.delete(emp)
+        db.session.commit()
+        flash(f'{emp} has been delete.')
+        return redirect(url_for('index'))
+    return render_template('delete.html', title='Delete Employee', form=form, emp=emp)
 
 
 @app.route('/logout', methods=['GET', 'POST'])

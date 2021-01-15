@@ -41,4 +41,9 @@ class EmployeeForm(FlaskForm):
     submit = SubmitField('Add Employee')
 
 
+class EmptyForm(FlaskForm):
+    submit = SubmitField()
+
+
+
 
